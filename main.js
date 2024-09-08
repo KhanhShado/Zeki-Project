@@ -305,7 +305,7 @@ function onBot() {
         console.log(chalk.blue(`=== DATABASE SQLITE ===`));
         global.loading(`${chalk.hex('#ff7100')(`[ CONNECT ] - `)} Đã kết nối thành công với cơ sở dữ liệu JSON!`, "DATABASE");
         onBot();
-    } catch (error) {Không thể kết nối với cơ sở dữ liệu JSON
+    } catch (error) {
         global.loading.err(`${chalk.hex('#ff7100')(`[ CONNECT ] - `)} Không thể kết nối với cơ sở dữ liệu JSON.`, "DATABASE");
     }
 })();
