@@ -158,7 +158,7 @@ function onBot() {
         (async () => {
             const commandsPath = `${global.client.mainPath}/modules/commands`;
             const listCommand = readdirSync(commandsPath).filter(command => command.endsWith('.js') && !command.includes('example') && !global.config.commandDisabled.includes(command));
-            console.log(chalk.blue(`============ LOADING COMMANDS ============`));
+            console.log(chalk.blue(`=== LOADING COMMANDS ===`));
             for (const command of listCommand) {
                 try {
                     const module = require(`${commandsPath}/${command}`);
@@ -226,7 +226,7 @@ function onBot() {
         })(),
         (async () => {
             const events = readdirSync(join(global.client.mainPath, 'modules/events')).filter(ev => ev.endsWith('.js') && !global.config.eventDisabled.includes(ev));
-            console.log(chalk.blue('============ LOADING EVENTS ============'));
+            console.log(chalk.blue("=== LOADING EVENTS ==='));
             for (const ev of events) {
                 try {
                     const event = require(join(global.client.mainPath, 'modules/events', ev));
@@ -279,7 +279,7 @@ function onBot() {
         console.log(chalk.blue(`=== BOT START ===`));
         global.loading(`${chalk.hex('#ff7100')(`[ SUCCESS ] - `)} Loaded ${global.client.commands.size} commands and ${global.client.events.size} events thành công`, "LOADED");
         global.loading(`${chalk.hex('#ff7100')(`[ TỐC ĐỘ MẠNG ] - `)} Khoảng: ${((Date.now() - global.client.timeStart) / 1000).toFixed()}ms`, "LOADED ]");
-        const listener = require('./includes/listen')({ api: loginApiData });
+        const listener = require('./core/listen')({ api: loginApiData });
         global.custom = require('./custom')({ api: loginApiData });
         global.handleListen = loginApiData.listenMqtt(async (error, message) => {
             if (error) {
