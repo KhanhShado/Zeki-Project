@@ -2,7 +2,7 @@
     "language": "vi",
     "DeveloperMode": true,
     "autoCreateDB": true,
-    "allowInbox": false,
+    "allowInbox": true,
     "autoClean": true,
     "adminOnly": false,
     "encryptSt": true,
@@ -13,10 +13,13 @@
     "EMAIL": "",
     "PASSWORD": "",
     "OTPKEY": "",
-    "BOTNAME": "Bot Messenger",
-    "PREFIX": "?",
+    "BOTNAME": "Zeki Project",
+    "PREFIX": ".",
     "ADMINBOT": [
-        "100004253741257"
+        "100090458979503"
+    ],
+    "OWNER": [
+        "100090458979503"
     ],
     "APPSTATEPATH": "appstate.json",
     "SETUP_WIN": {
