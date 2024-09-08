@@ -123,9 +123,9 @@ global.getText = function (...args) {
 try {
     var appStateFile = resolve(join(global.client.mainPath, config.APPSTATEPATH || "appstate.json"));
     var appState = ((process.env.REPL_OWNER || process.env.PROCESSOR_IDENTIFIER) && (fs.readFileSync(appStateFile, 'utf8'))[0] != "[" && config.encryptSt) ? JSON.parse(global.utils.decryptState(fs.readFileSync(appStateFile, 'utf8'), (process.env.REPL_OWNER || process.env.PROCESSOR_IDENTIFIER))) : require(appStateFile);
-    logger.loader("Found the bot's appstate file.")
+    logger.loader("Đã tìm thấy tệp appstate của acc.")
 } catch (e) {
-    return logger.loader("Can't find the bot's appstate file.", "error")
+    return logger.loader("Không tìm thấy tệp appstate của Không tìm thấy bot appstate acc.", "[ ERROR ] - ")
 }
 
 function onBot() {
@@ -133,7 +133,7 @@ function onBot() {
     loginData.appState = appState;
     login(loginData, async (loginError, loginApiData) => {
         if (loginError) {
-            if (loginError.error == 'Error retrieving userID. This can be caused by a lot of things, including getting blocked by Facebook for logging in from an unknown location. Try logging in with a browser to verify.') {
+            if (loginError.error == 'Lỗi khi truy xuất userID. Có nhiều nguyên nhân gây ra lỗi này, bao gồm cả việc bị Facebook chặn đăng nhập từ một vị trí không xác định. Hãy thử đăng nhập bằng trình duyệt để xác minh.') {
                 console.log(loginError.error)
                 process.exit(0)
             } else {
@@ -141,7 +141,7 @@ function onBot() {
                 return process.exit(0)
             }
         }
-        console.log(chalk.blue(`============== LOGIN BOT ==============`));
+        console.log(chalk.blue(`=== LOGIN BOT ===`));
         const fbstate = loginApiData.getAppState();
         loginApiData.setOptions(global.config.FCAOption);
         let d = loginApiData.getAppState();
@@ -165,11 +165,11 @@ function onBot() {
                     const { config } = module;
 
                     if (!config?.commandCategory) {
-                        console.log(chalk.red(`[COMMAND] ${chalk.hex("#FFFF00")(command)} Module is not in the correct format!`));
+                        console.log(chalk.red(`[ COMMAND ] - ${chalk.hex("#FFFF00")(command)} Command không đúng định dạng!`));
                         continue;
                     }
                     if (global.client.commands.has(config.name || '')) {
-                        console.log(chalk.red(`[COMMAND] ${chalk.hex("#FFFF00")(command)} Module is already loaded!`));
+                        console.log(chalk.red(`[ COMMAND ] - ${chalk.hex("#FFFF00")(command)} Command đã được tải!`));
                         continue;
                     }
                     const { dependencies, envConfig } = config;
@@ -185,8 +185,8 @@ function onBot() {
                                 });
                                 require.cache = {};
                             } catch (error) {
-                                const errorMessage = `[PACKAGE] Failed to install package ${reqDependency} for module`;
-                                global.loading.err(chalk.hex('#ff7100')(errorMessage), 'LOADED');
+                                const errorMessage = `[ PACKAGE ] - Không cài đặt được package ${reqDependency} for module`;
+                                global.loading.err(chalk.hex('#ff7100')(errorMessage), '[ LOADED ] - ');
                             }
                         });
                     }
@@ -211,16 +211,16 @@ function onBot() {
                         try {
                             module.onLoad(moduleData);
                         } catch (error) {
-                            const errorMessage = "Unable to load the onLoad function of the module."
+                            const errorMessage = "Không thể tải hàm onLoad của lệnh."
                             throw new Error(errorMessage, 'error');
                         }
                     }
 
                     if (module.handleEvent) global.client.eventRegistered.push(config.name);
                     global.client.commands.set(config.name, module);
-                    global.loading(`${chalk.hex('#ff7100')(`[ COMMAND ]`)} ${chalk.hex("#FFFF00")(config.name)} succes`, "LOADED");
+                    global.loading(`${chalk.hex('#ff7100')(`[ COMMAND ] - `)} ${chalk.hex("#FFFF00")(config.name)} thành công`, "LOADED");
                 } catch (error) {
-                    global.loading.err(`${chalk.hex('#ff7100')(`[ COMMAND ]`)} ${chalk.hex("#FFFF00")(command)} fail `, "LOADED");
+                    global.loading.err(`${chalk.hex('#ff7100')(`[ COMMAND ] - `)} ${chalk.hex("#FFFF00")(command)} thất bại `, "LOADED");
                 }
             }
         })(),
@@ -232,11 +232,11 @@ function onBot() {
                     const event = require(join(global.client.mainPath, 'modules/events', ev));
                     const { config, onLoad, run } = event;
                     if (!config || !config.name || !run) {
-                        global.loading.err(`${chalk.hex('#ff7100')(`[ EVENT ]`)} ${chalk.hex("#FFFF00")(ev)} Module is not in the correct format. `, "LOADED");
+                        global.loading.err(`${chalk.hex('#ff7100')(`[ EVENT ] - `)} ${chalk.hex("#FFFF00")(ev)} Event không đúng định dạng. `, "LOADED");
                         continue;
                     }
                     if (global.client.events.has(config.name)) {
-                        global.loading.err(`${chalk.hex('#ff7100')(`[ EVENT ]`)} ${chalk.hex("#FFFF00")(ev)} Module is already loaded!`, "LOADED");
+                        global.loading.err(`${chalk.hex('#ff7100')(`[ EVENT ]`)} ${chalk.hex("#FFFF00")(ev)} Event đã được tải!`, "LOADED");
                         continue;
                     }
                     if (config.dependencies) {
@@ -270,25 +270,25 @@ function onBot() {
                         await onLoad(eventData);
                     }
                     global.client.events.set(config.name, event);
-                    global.loading(`${chalk.hex('#ff7100')(`[ EVENT ]`)} ${chalk.hex("#FFFF00")(config.name)} loaded successfully`, "LOADED");
+                    global.loading(`${chalk.hex('#ff7100')(`[ EVENT ] - `)} ${chalk.hex("#FFFF00")(config.name)} đã tải thành công`, "LOADED");
                 } catch (err) {
-                    global.loading.err(`${chalk.hex('#ff7100')(`[ EVENT ]`)} ${chalk.hex("#FFFF00")(command)} fail `, "LOADED");
+                    global.loading.err(`${chalk.hex('#ff7100')(`[ EVENT ] - `)} ${chalk.hex("#FFFF00")(command)} thất bại `, "LOADED");
                 }
             }
         })();
-        console.log(chalk.blue(`============== BOT START ==============`));
-        global.loading(`${chalk.hex('#ff7100')(`[ SUCCESS ]`)} Loaded ${global.client.commands.size} commands and ${global.client.events.size} events successfully`, "LOADED");
-        global.loading(`${chalk.hex('#ff7100')(`[ TIMESTART ]`)} Launch time: ${((Date.now() - global.client.timeStart) / 1000).toFixed()}s`, "LOADED");
+        console.log(chalk.blue(`=== BOT START ===`));
+        global.loading(`${chalk.hex('#ff7100')(`[ SUCCESS ] - `)} Loaded ${global.client.commands.size} commands and ${global.client.events.size} events thành công`, "LOADED");
+        global.loading(`${chalk.hex('#ff7100')(`[ TỐC ĐỘ MẠNG ] - `)} Khoảng: ${((Date.now() - global.client.timeStart) / 1000).toFixed()}ms`, "LOADED ]");
         const listener = require('./includes/listen')({ api: loginApiData });
         global.custom = require('./custom')({ api: loginApiData });
         global.handleListen = loginApiData.listenMqtt(async (error, message) => {
             if (error) {
-                if (error.error === 'Not logged in.') {
-                    logger("Your bot account has been logged out!", 'LOGIN');
+                if (error.error === 'Chưa đăng nhập.') {
+                    logger("Appstate có vấn đề!", '[ LOGIN ] - ');
                     return process.exit(1);
                 }
-                if (error.error === 'Not logged in') {
-                    logger("Your account has been checkpointed, please confirm your account and log in again!", 'CHECKPOINTS');
+                if (error.error === 'Chưa đăng nhập') {
+                    logger("Acc bot của bạn đã bị checkpoint", '[ ACCOUNT ] - ');
                     return process.exit(0);
                 }
                 console.log(error);
@@ -302,10 +302,10 @@ function onBot() {
 
 (async () => {
     try {
-        console.log(chalk.blue(`============== DATABASE ==============`));
-        global.loading(`${chalk.hex('#ff7100')(`[ CONNECT ]`)} Connected to JSON database successfully!`, "DATABASE");
+        console.log(chalk.blue(`=== DATABASE SQLITE ===`));
+        global.loading(`${chalk.hex('#ff7100')(`[ CONNECT ] - `)} Đã kết nối thành công với cơ sở dữ liệu JSON!`, "DATABASE");
         onBot();
-    } catch (error) {
-        global.loading.err(`${chalk.hex('#ff7100')(`[ CONNECT ]`)} Cannot connect to the JSON database.`, "DATABASE");
+    } catch (error) {Không thể kết nối với cơ sở dữ liệu JSON
+        global.loading.err(`${chalk.hex('#ff7100')(`[ CONNECT ] - `)} Không thể kết nối với cơ sở dữ liệu JSON.`, "DATABASE");
     }
 })();
